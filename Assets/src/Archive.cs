@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO;
 using SFB; // Necesitas el paquete "StandaloneFileBrowser"
 using TMPro;
+using System.Text;
 public class CustomFileLoader : MonoBehaviour
 {
     public string _fileContent;
@@ -23,24 +24,50 @@ public class CustomFileLoader : MonoBehaviour
     {
 
     }
-    void Update()
+
+    public void ExportToGWFile()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (scriptInputField == null || string.IsNullOrEmpty(scriptInputField.text))
         {
-            LoadCustomFile();
+            Debug.LogWarning("No hay contenido para exportar!");
+            return;
+        }
+
+        // Configurar la extensión y filtro
+        var extensionList = new[] {
+            new ExtensionFilter("GW Files", "gw"),
+            new ExtensionFilter("All Files", "*")
+        };
+
+        // Abrir diálogo para guardar archivo
+        string path = StandaloneFileBrowser.SaveFilePanel(
+            "Exportar como .gw",
+            "",
+            "nuevoArchivo.gw",
+            extensionList
+        );
+
+        if (!string.IsNullOrEmpty(path))
+        {
+            try
+            {
+                // Asegurar que tenga la extensión .gw
+                if (!path.EndsWith(".gw"))
+                {
+                    path += ".gw";
+                }
+
+                // Escribir el archivo con codificación UTF-8
+                File.WriteAllText(path, scriptInputField.text, Encoding.UTF8);
+                Debug.Log($"Archivo guardado en: {path}");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Error al exportar: {e.Message}");
+            }
         }
     }
-    // public void LoadCustomFile()//
-    // {
-    //     // Abre el diálogo para seleccionar archivo
-    //     var paths = StandaloneFileBrowser.OpenFilePanel("Abrir archivo .gw", "", "gw", false);
 
-    //     if (paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))
-    //     {
-    //         fileContent = File.ReadAllText(paths[0]);
-    //         Debug.Log("Contenido cargado:\n" + fileContent);
-    //     }
-    // }
     public void LoadCustomFile()
     {
         var paths = StandaloneFileBrowser.OpenFilePanel("Abrir archivo .gw", "", "gw", false);

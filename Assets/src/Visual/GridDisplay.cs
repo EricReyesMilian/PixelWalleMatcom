@@ -21,17 +21,17 @@ public class GridDisplay : MonoBehaviour
     /// </summary>
     void Start()
     {
-        UpdateCellSize();
+        UpdateCellSize(X);
     }
 
     /// <summary>
     /// Updates the grid layout based on current parameters
     /// </summary>
-    void UpdateCellSize()
+    public void UpdateCellSize(int X)
     {
         gridLayout.constraintCount = X;
         Erase();
-        Create();//test
+        Create(X);//test
         float ratio = (400 - (gridLayout.spacing.x * (X + 1))) / gridLayout.constraintCount;
         gridLayout.cellSize = new Vector2(ratio, ratio);
     }
@@ -50,7 +50,7 @@ public class GridDisplay : MonoBehaviour
     /// <summary>
     /// Creates grid cells to fill the gridWrapper
     /// </summary>
-    void Create()
+    void Create(int X)
     {
         for (int i = 0; i < X; i++)
         {
