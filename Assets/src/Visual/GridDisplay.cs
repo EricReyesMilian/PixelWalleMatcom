@@ -19,7 +19,7 @@ public class GridDisplay : MonoBehaviour
     /// <summary>
     /// Called when values are changed in the inspector
     /// </summary>
-    void Update()
+    void Start()
     {
         UpdateCellSize();
     }
@@ -52,9 +52,20 @@ public class GridDisplay : MonoBehaviour
     /// </summary>
     void Create()
     {
+        for (int i = 0; i < X; i++)
+        {
+            for (int j = 0; j < X; j++)
+            {
+                Instantiate(cellPref, gridWrapper);
+
+            }
+        }
         for (int i = 0; i < X * X; i++)
         {
-            Instantiate(cellPref, gridWrapper);
+
+            gridWrapper.GetChild(i).name = $"Cell {i / X}_{i % X}";
+
+
         }
     }
 }
