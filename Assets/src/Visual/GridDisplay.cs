@@ -32,8 +32,8 @@ public class GridDisplay : MonoBehaviour
         gridLayout.constraintCount = X;
         Erase();
         Create();//test
-        float ratio = 100 / gridLayout.constraintCount;
-        gridLayout.cellSize = new Vector2(ratio * 4, ratio * 4);
+        float ratio = (400 - (gridLayout.spacing.x * (X + 1))) / gridLayout.constraintCount;
+        gridLayout.cellSize = new Vector2(ratio, ratio);
     }
 
     /// <summary>
