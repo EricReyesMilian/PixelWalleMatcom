@@ -1,16 +1,6 @@
 using System;
 using System.Collections.Generic;
-public enum Colors
-{
-    Transparent,
-    Red,
-    Green,
-    Yellow,
-    Orange,
-    Purple,
-    Black,
-    White,
-}
+
 public class Walle
 {
 
@@ -19,21 +9,11 @@ public class Walle
     public (int, int) wallEPos { get; private set; }
     public int CanvasSizeX { get; private set; }
     public int CanvasSizeY { get; private set; }
-    static Dictionary<Colors, (float, float, float, float)> brushColor = new Dictionary<Colors, (float, float, float, float)>()
-    {
-        { Colors.Transparent, (0,0,0,0) },
-        { Colors.Red, (1,0,0,1) },          // Correct
-        { Colors.Green, (0,1,0,1) },        // Fixed - Green should be (0,1,0,1)
-        { Colors.Yellow, (1,1,0,1) },       // Fixed - Yellow is red+green (1,1,0,1)
-        { Colors.Orange, (1,0.5f,0,1) },    // Correct orange
-        { Colors.Purple, (0.5f,0,0.5f,1) }, // Correct purple
-        { Colors.Black, (0,0,0,1) },        // Correct
-        { Colors.White, (1,1,1,1) }         // Correct
-    };
+
 
     public void Spawn(int x, int y)
     {
-
+        wallEPos = new(x, y);
 
     }
     public void Color(string color)
@@ -41,21 +21,15 @@ public class Walle
         try
         {
             // Convertir el string a enum (case insensitive)
-            Colors newColor = (Colors)System.Enum.Parse(typeof(Colors), color, true);
 
-            if (brushColor.ContainsKey(newColor))
-            {
-                currentColor = newColor;
-                Console.WriteLine($"Color cambiado a: {currentColor}");
-            }
-            else
-            {
-                Console.WriteLine($"Color '{color}' no encontrado en el diccionario");
-            }
+            Colors newColor = (Colors)System.Enum.Parse(typeof(Colors), color, true);
+            currentColor = newColor;
+            ErrorHandler.errorHandler.Info($"Color cambiado a: {currentColor}");
+
         }
         catch (System.ArgumentException)
         {
-            Console.WriteLine($"Color '{color}' no válido. Opciones disponibles: {string.Join(", ", System.Enum.GetNames(typeof(Colors)))}");
+            ErrorHandler.errorHandler.Error($"Color '{color}' no válido. Opciones disponibles: {string.Join(", ", System.Enum.GetNames(typeof(Colors)))}");
         }
     }
     public void Size(int k)
@@ -73,7 +47,7 @@ public class Walle
         }
         else
         {
-            Console.WriteLine("Inserte un valor mayor que cero");
+            ErrorHandler.errorHandler.Info("Inserte un valor mayor que cero");
         }
     }
     public void DrawLine(int dirx, int diry, int distance)
@@ -102,9 +76,9 @@ public class Walle
         return wallEPos.Item2;
 
     }
-    public (int, int) GetCanvasSize()
+    public int GetCanvasSize()
     {
-        return (CanvasSizeX, CanvasSizeY);
+        return 10;
     }
     public int GetColorCount(string color, int x1, int y1, int x2, int y2)
     {
