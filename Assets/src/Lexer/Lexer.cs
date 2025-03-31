@@ -15,7 +15,7 @@ public class Lexer
     // Operadores
     private readonly HashSet<string> _operators = new() { "+", "-", "*", "**", "%", "/", "=", "<", ">", "<=", ">=", "==", "<-", "&&", "||" };
     // Delimitadores
-    private readonly HashSet<char> _punctuation = new() { '(', ')', '[', ']' };
+    private readonly HashSet<char> _punctuation = new() { '(', ')', ',', '[', ']' };
 
     public Lexer(string input)
     {
@@ -26,6 +26,7 @@ public class Lexer
     {
         List<Token> tokens = new();
         Token token;
+
 
         do
         {
@@ -49,6 +50,8 @@ public class Lexer
 
         if (char.IsLetter(current) || current == '_')
             return ReadIdentifier();
+        if (_operators.Contains(current.ToString()))
+            return ReadOperator();
 
         if (_punctuation.Contains(current))
             return ReadPunctuation();
@@ -57,6 +60,26 @@ public class Lexer
         ErrorHandler.errorHandler.Error($"Carácter inesperado: '{current}' {_line}, {_column}");
         return null;
 
+    }
+    private Token ReadOperator()
+    {
+        char op = _input[_position];
+        int currentLine = _line;
+        int currentCol = _column;
+        Advance();
+
+        // Operadores de dos caracteres (==, <=, >=, etc.)
+        if (_position < _input.Length && _operators.Contains(_input[_position].ToString()))
+        {
+            string doubleOp = op.ToString() + _input[_position];
+            if (IsValidDoubleOperator(doubleOp))
+            {
+                Advance();
+                return new Token(TokenType.Operator, doubleOp, currentLine, currentCol);
+            }
+        }
+
+        return new Token(TokenType.Operator, op.ToString(), currentLine, currentCol);
     }
     private Token ReadNumber()
     {
@@ -78,7 +101,7 @@ public class Lexer
         int startLine = _line;
         int startCol = _column;
 
-        while (_position < _input.Length && (char.IsLetterOrDigit(_input[_position]) || _input[_position] == '_'))
+        while (_position < _input.Length && (char.IsLetterOrDigit(_input[_position]) || _input[_position] == '_' || _input[_position] == '-'))
         {
             Advance();
         }
