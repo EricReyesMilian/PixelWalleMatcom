@@ -24,7 +24,25 @@ public class MenuGridAnimationHandler : MonoBehaviour
     }
     public void SetNewGrid()
     {
-        grid.UpdateCellSize(int.Parse(num.text));
+        try
+        {
+            int x = int.Parse(num.text);
+            if (x > 0 && x <= 100)
+            {
+                grid.UpdateCellSize(int.Parse(num.text));
+
+            }
+            else
+            {
+                ErrorHandler.errorHandler.Error("Introduzca un valor entero mayor que 0 y menor que 101");
+            }
+        }
+        catch
+        {
+            ErrorHandler.errorHandler.Error("Introduzca un valor entero mayor que 0 y menor que 101");
+
+        }
+
         ActionAnim();
     }
 }

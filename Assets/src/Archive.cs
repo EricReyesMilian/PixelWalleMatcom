@@ -29,7 +29,7 @@ public class CustomFileLoader : MonoBehaviour
     {
         if (scriptInputField == null || string.IsNullOrEmpty(scriptInputField.text))
         {
-            Debug.LogWarning("No hay contenido para exportar!");
+            ErrorHandler.errorHandler.Error("No hay contenido para exportar!");
             return;
         }
 
@@ -59,11 +59,11 @@ public class CustomFileLoader : MonoBehaviour
 
                 // Escribir el archivo con codificación UTF-8
                 File.WriteAllText(path, scriptInputField.text, Encoding.UTF8);
-                Debug.Log($"Archivo guardado en: {path}");
+                ErrorHandler.errorHandler.Error($"Archivo guardado en: {path}");
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Error al exportar: {e.Message}");
+                ErrorHandler.errorHandler.Error($"Error al exportar: {e.Message}");
             }
         }
     }
@@ -77,11 +77,11 @@ public class CustomFileLoader : MonoBehaviour
             try
             {
                 fileContent = File.ReadAllText(paths[0]); // Usamos la propiedad, no el campo
-                Debug.Log("Archivo cargado correctamente");
+                ErrorHandler.errorHandler.Info("Archivo cargado correctamente");
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Error al leer el archivo: {e.Message}");
+                ErrorHandler.errorHandler.Error($"Error al leer el archivo: {e.Message}");
             }
         }
     }

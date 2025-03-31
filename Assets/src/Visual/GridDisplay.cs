@@ -15,6 +15,8 @@ public class GridDisplay : MonoBehaviour
 
     [Tooltip("Grid Layout Group component that handles cell arrangement")]
     public GridLayoutGroup gridLayout;
+    public GridCoord coordX;
+    public GridCoord coordY;
 
     /// <summary>
     /// Called when values are changed in the inspector
@@ -23,17 +25,39 @@ public class GridDisplay : MonoBehaviour
     {
         UpdateCellSize(X);
     }
-
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            ErrorHandler.errorHandler.Error("esto funciona");
+        }
+    }
     /// <summary>
     /// Updates the grid layout based on current parameters
     /// </summary>
     public void UpdateCellSize(int X)
     {
+        this.X = X;
         gridLayout.constraintCount = X;
         Erase();
         Create(X);//test
-        float ratio = (400 - (gridLayout.spacing.x * (X + 1))) / gridLayout.constraintCount;
+        float ratio;
+        if (X > 50)
+        {
+            gridLayout.spacing = Vector2.zero;
+            ratio = (400f) / gridLayout.constraintCount;
+
+        }
+        else
+        {
+            gridLayout.spacing = new Vector2(2, 2);
+
+            ratio = (400 - (gridLayout.spacing.x * (X + 1))) / gridLayout.constraintCount;
+
+        }
         gridLayout.cellSize = new Vector2(ratio, ratio);
+        coordX.UpdateCellSize();
+        coordY.UpdateCellSize();
     }
 
     /// <summary>

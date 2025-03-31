@@ -9,16 +9,12 @@ public class GridCoord : MonoBehaviour
     public GameObject num;
     public Transform numWrapper;
     public bool isVertical;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        UpdateCellSize();
-    }
+
 
     /// <summary>
     /// Updates the grid layout based on current parameters
     /// </summary>
-    void UpdateCellSize()
+    public void UpdateCellSize()
     {
         count = gridDisplay.X;
         gridLayout.spacing = gridDisplay.gridLayout.spacing;
