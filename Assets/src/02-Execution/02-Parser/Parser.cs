@@ -3,44 +3,84 @@ using System.Collections.Generic;
 
 public class Parser
 {
-    private readonly List<Token> _tokens;
+    private readonly List<Token> tokens;
+    private int _currentLine;
     private int _currentPosition;
     List<ASTNode> block = new List<ASTNode>();
-
+    List<List<Token>> tokensByLine = new List<List<Token>>();
+    private SemanticException semanticException = new SemanticException();
+    bool errorInLine = false;
+    // en caso de error saltar la linea q se esta procesando
     public Parser(List<Token> tokens)
     {
-        _tokens = tokens;
-        _currentPosition = 0;
+        this.tokens = tokens;
+
+
     }
 
     public List<ASTNode> Parse()
     {
 
-
-        for (int i = 0; i < _tokens.Count; i++)
+        tokensByLine = ProccesTokensByLine(tokens);//explorar linea a linea
+        for (_currentLine = 0; _currentLine < tokensByLine.Count; _currentLine++)
         {
-            if (_tokens[_currentPosition].Value != " " && _tokens[_currentPosition].Type != TokenType.Null)
-                block.Add(ParseKeyW());
-            i = ++_currentPosition;
+            for (_currentPosition = 0; _currentPosition < tokensByLine[_currentLine].Count; _currentPosition++)
+            {
+                if (tokensByLine[_currentLine][_currentPosition].Value != " " && tokensByLine[_currentLine][_currentPosition].Type != TokenType.Null && tokensByLine[_currentLine][_currentPosition].Type != TokenType.END)
+                {
+                    errorInLine = false;
+                    ASTNode proccesNode = ParseKeyW();
+                    if (!errorInLine)
+                    {
+                        block.Add(proccesNode);
+
+                    }
+                }
+            }
+
         }
+        // for (int i = 0; i < tokensByLine[_currentLine].Count; i++)
+        // {
+        //     if (tokensByLine[_currentLine][_currentPosition].Value != " " && tokensByLine[_currentLine][_currentPosition].Type != TokenType.Null)
+        //     {
+        //         errorInLine = false;
+        //         ASTNode proccesNode = ParseKeyW();
+        //         if (!errorInLine)
+        //         {
+        //             block.Add(proccesNode);
+
+        //         }
+        //     }
+        //     i = ++_currentPosition;
+        // }
         return block;
+    }
+    private List<List<Token>> ProccesTokensByLine(List<Token> tokens)
+    {
+        List<List<Token>> tokensByLine = new List<List<Token>>();
+        for (int i = 0; i < tokens.Count; i++)
+        {
+            while (tokens[i].Line > tokensByLine.Count - 1)
+            {
+                tokensByLine.Add(new List<Token>());
+            }
+            tokensByLine[tokens[i].Line].Add(tokens[i]);
+        }
+        return tokensByLine;
+
     }
     private LabelNode FindLabel(string labelName)
     {
-        int lines = 0;
         Token labelObj;
-        for (int i = _currentPosition + 1; i < _tokens.Count; i++)
+        for (int i = _currentLine + 1; i < tokensByLine.Count; i++)
         {
-            if (_tokens[i].Value == " ")
+
+            if (tokensByLine[i][0].Type == TokenType.Identifier)
             {
-                lines++;
-            }
-            if (_tokens[i].Type == TokenType.Identifier)
-            {
-                if (_tokens[i].Value == labelName)
+                if (tokensByLine[i][0].Value == labelName)
                 {
-                    labelObj = _tokens[i];
-                    return new LabelNode(labelObj, lines + block.Count);
+                    labelObj = tokensByLine[i][0];
+                    return new LabelNode(labelObj, i);
                 }
             }
         }
@@ -50,12 +90,12 @@ public class Parser
     {
         if (Match(TokenType.Keyword) || Match(TokenType.Function))
         {
-            Token kw = _tokens[_currentPosition];
+            Token kw = tokensByLine[_currentLine][_currentPosition];
             if (Match(TokenType.Function))
             {
                 if (_currentPosition - 1 > 0)
                 {
-                    if (_tokens[_currentPosition - 1].Value == " ")
+                    if (tokensByLine[_currentLine][_currentPosition - 1].Value == " ")
                     {
                         throw new Exception($"Debes declarar una instruccion {Peek()}");
                     }
@@ -78,28 +118,28 @@ public class Parser
     {
         if (Match(TokenType.Goto))
         {
-            Token tokengoto = _tokens[_currentPosition];
+            Token tokengoto = tokensByLine[_currentLine][_currentPosition];
             LabelNode label;
             ASTNode expresion;
 
-            if (++_currentPosition < _tokens.Count && Match(TokenType.Punctuation, "["))
+            if (++_currentPosition < tokensByLine[_currentLine].Count && Match(TokenType.Punctuation, "["))
             {
-                if (++_currentPosition < _tokens.Count && Match(TokenType.Identifier))
+                if (++_currentPosition < tokensByLine[_currentLine].Count && Match(TokenType.Identifier))
                 {
                     //buscar el label
-                    if (FunctionManager.labels.ContainsKey(_tokens[_currentPosition].Value))
+                    if (FunctionManager.labels.ContainsKey(tokensByLine[_currentLine][_currentPosition].Value))
                     {
-                        label = new LabelNode(_tokens[_currentPosition], FunctionManager.labels[_tokens[_currentPosition].Value]);
+                        label = new LabelNode(tokensByLine[_currentLine][_currentPosition], FunctionManager.labels[tokensByLine[_currentLine][_currentPosition].Value]);
 
                     }
                     else
                     {
-                        label = FindLabel(_tokens[_currentPosition].Value);
+                        label = FindLabel(tokensByLine[_currentLine][_currentPosition].Value);
                     }
                     //
-                    if (++_currentPosition < _tokens.Count && Match(TokenType.Punctuation, "]"))
+                    if (++_currentPosition < tokensByLine[_currentLine].Count && Match(TokenType.Punctuation, "]"))
                     {
-                        if (++_currentPosition < _tokens.Count && Match(TokenType.Punctuation, "("))
+                        if (++_currentPosition < tokensByLine[_currentLine].Count && Match(TokenType.Punctuation, "("))
                         {
                             expresion = ParseLogic();
                             --_currentPosition;
@@ -149,12 +189,12 @@ public class Parser
     {
         if (Match(TokenType.Identifier))
         {
-            var variable = _tokens[_currentPosition];
+            var variable = tokensByLine[_currentLine][_currentPosition];
 
             Consume();
             if (Match(TokenType.Operator, "<-"))
             {
-                Token op = _tokens[_currentPosition++];
+                Token op = tokensByLine[_currentLine][_currentPosition++];
                 //controlar out of index
                 ASTNode right;
 
@@ -170,20 +210,20 @@ public class Parser
         }
         else
         {
-            throw new Exception($"Se Esperaba una instruccion {Peek()}");
 
+            throw new Exception($"Se Esperaba una instruccion {Peek()}");
         }
     }
     private ASTNode ParseLabel()
     {
-        if (_tokens[_currentPosition + 1].Type == TokenType.Jump || _tokens[_currentPosition + 1].Type == TokenType.END)
+        if (tokensByLine[_currentLine][_currentPosition + 1].Type == TokenType.Jump || tokensByLine[_currentLine][_currentPosition + 1].Type == TokenType.END)
         {
-            if (FunctionManager.labels.ContainsKey(_tokens[_currentPosition].Value))
+            if (FunctionManager.labels.ContainsKey(tokensByLine[_currentLine][_currentPosition].Value))
             {
                 throw new Exception($"Ese label ya estaba declarado {Peek()}");
             }
-            FunctionManager.labels.Add(_tokens[_currentPosition].Value, block.Count);
-            return new LabelNode(_tokens[_currentPosition], block.Count);
+            FunctionManager.labels.Add(tokensByLine[_currentLine][_currentPosition].Value, block.Count);
+            return new LabelNode(tokensByLine[_currentLine][_currentPosition], block.Count);
         }
         else
             throw new Exception($"Se esperaba una instruccion {Peek()}");
@@ -208,7 +248,7 @@ public class Parser
             }
             else
             {
-                if (_tokens[_currentPosition].Value != ")" || _tokens[_currentPosition].Value != "\n" || _tokens[_currentPosition].Value != "\r")
+                if (tokensByLine[_currentLine][_currentPosition].Value != ")" || tokensByLine[_currentLine][_currentPosition].Value != "\n" || tokensByLine[_currentLine][_currentPosition].Value != "\r")
                 {
                     break;
                 }
@@ -342,12 +382,12 @@ public class Parser
 
         }
     }
-    private bool Match(TokenType type, string? value = null, Token? tokenaux = null)
+    private bool Match(TokenType type, string value = null, Token tokenaux = null)
     {
-        if (_currentPosition >= _tokens.Count) return false;
+        if (_currentPosition >= tokensByLine[_currentLine].Count) return false;
         Token token;
         if (tokenaux == null)
-            token = _tokens[_currentPosition];
+            token = tokensByLine[_currentLine][_currentPosition];
         else
             token = tokenaux;
 
@@ -362,12 +402,12 @@ public class Parser
 
     private Token Consume()
     {
-        return _tokens[_currentPosition++];
+        return tokensByLine[_currentLine][_currentPosition++];
     }
 
     private Token Peek()
     {
 
-        return _currentPosition < _tokens.Count ? _tokens[_currentPosition] : throw new Exception("Fuera de los limites");
+        return _currentPosition < tokensByLine[_currentLine].Count ? tokensByLine[_currentLine][_currentPosition] : throw new Exception("Fuera de los limites");
     }
 }

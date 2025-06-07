@@ -6,6 +6,7 @@ public class Interpreter
     public Interpreter(List<ASTNode> asT)
     {
         ast = asT;
+        rama = 0;
         while (rama < ast.Count)
         {
             Interpretar(rama++);

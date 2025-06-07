@@ -1,5 +1,6 @@
 using System;
-public abstract class ASTNode
+using UnityEngine;
+public abstract class ASTNode //: MonoBehaviour
 {
     public Token token { get; }
 
@@ -11,9 +12,9 @@ public abstract class ASTNode
 
     public virtual void PrintTree(string indent = "", bool last = true)
     {
-        Console.Write(indent);
-        Console.Write(last ? "└─ " : "├─ ");
-        Console.WriteLine($"{GetType().Name} > {token}");
+        // print(indent);
+        // print(last ? "└─ " : "├─ ");
+        // print($"{GetType().Name} > {token}");
     }
 
 }

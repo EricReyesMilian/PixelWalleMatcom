@@ -2,8 +2,8 @@ using System;
 public static class CanvasGrid
 {
     public static int WalleX = 0;
-    public static int WalleY = 1;
-    public static int Size = 3;
+    public static int WalleY = 0;
+    public static int Size = 1;
     public static int Color = 1;
     public static int horizontal = 10;
     public static int vertical = 10;
@@ -14,13 +14,20 @@ public static class CanvasGrid
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 5, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     };
     public static event Action<int, int, int> draw_event;
+    public static void Reset()
+    {
+        WalleX = 0;
+        WalleY = 0;
+        Size = 1;
+        Color = 1;
+    }
     public static void SetWalleX(int x)
     {
 
