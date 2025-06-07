@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 public class GridCoord : MonoBehaviour
 {
-    public GridDisplay gridDisplay;
+    public Display gridDisplay;
     public GridLayoutGroup gridLayout;
     public int count;
     public GameObject num;
@@ -16,20 +16,20 @@ public class GridCoord : MonoBehaviour
     /// </summary>
     public void UpdateCellSize()
     {
-        count = gridDisplay.X;
-        gridLayout.spacing = gridDisplay.gridLayout.spacing;
-        Erase();
-        Create();
-        if (isVertical)
-        {
-            gridLayout.cellSize = new Vector2(16f, gridDisplay.gridLayout.cellSize.x);
+        // count = gridDisplay.X;
+        // gridLayout.spacing = gridDisplay.gridLayout.spacing;
+        // Erase();
+        // Create();
+        // if (isVertical)
+        // {
+        //     gridLayout.cellSize = new Vector2(16f, gridDisplay.gridLayout.cellSize.x);
 
-        }
-        else
-        {
-            gridLayout.cellSize = new Vector2(gridDisplay.gridLayout.cellSize.x, 16f);
+        // }
+        // else
+        // {
+        //     gridLayout.cellSize = new Vector2(gridDisplay.gridLayout.cellSize.x, 16f);
 
-        }
+        // }
     }
 
     /// <summary>

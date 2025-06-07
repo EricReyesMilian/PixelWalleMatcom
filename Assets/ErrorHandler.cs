@@ -6,6 +6,7 @@ public class ErrorHandler : MonoBehaviour
     public static ErrorHandler errorHandler;
     public TMP_InputField errorSMS;
     public Animator anim;
+    bool onScreen;
     void Awake()
     {
         if (errorHandler == null)
@@ -20,7 +21,7 @@ public class ErrorHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        errorSMS.onValueChanged.AddListener(Show);
+        //errorSMS.onValueChanged.AddListener(Show);
 
     }
     public void Warning(string message)
@@ -28,6 +29,12 @@ public class ErrorHandler : MonoBehaviour
         errorSMS.textComponent.color = Color.yellow;
         errorSMS.text = message;
         Show(message);
+
+    }
+    public void AddError(string message)
+    {
+        errorSMS.text += message;
+        errorSMS.text += "\n";
 
     }
     public void Error(string message)
@@ -41,11 +48,32 @@ public class ErrorHandler : MonoBehaviour
     {
         errorSMS.textComponent.color = Color.green;
 
-        errorSMS.text = message;
+        errorSMS.text += message;
         Show(message);
     }
-    void Show(string text)
+    public void Show(string text)
     {
+
         anim.SetTrigger("show");
+        onScreen = true;
+    }
+    public void Close()
+    {
+        anim.SetTrigger("close");
+        onScreen = false;
+    }
+    public void ActionButton()
+    {
+        if (!onScreen)
+        {
+            anim.SetTrigger("show");
+            onScreen = true;
+        }
+        else
+        {
+            Close();
+
+        }
+
     }
 }

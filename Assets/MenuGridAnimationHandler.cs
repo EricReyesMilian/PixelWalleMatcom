@@ -4,7 +4,7 @@ public class MenuGridAnimationHandler : MonoBehaviour
 {
     Animator anim;
     public TMP_InputField num;
-    public GridDisplay grid;
+    public Display grid;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,9 +27,10 @@ public class MenuGridAnimationHandler : MonoBehaviour
         try
         {
             int x = int.Parse(num.text);
-            if (x > 0 && x <= 100)
+            if (x > 0)
             {
-                grid.UpdateCellSize(int.Parse(num.text));
+                CanvasGrid.ResizeCanvas(x, x);
+                grid.UpdateCellSize();
 
             }
             else
