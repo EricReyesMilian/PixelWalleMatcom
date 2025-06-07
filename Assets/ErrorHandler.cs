@@ -27,8 +27,8 @@ public class ErrorHandler : MonoBehaviour
     public void Warning(string message)
     {
         errorSMS.textComponent.color = Color.yellow;
-        errorSMS.text = message;
-        Show(message);
+        errorSMS.text += message;
+        //Show(message);
 
     }
     public void AddError(string message)
@@ -41,15 +41,15 @@ public class ErrorHandler : MonoBehaviour
     {
         errorSMS.textComponent.color = Color.red;
 
-        errorSMS.text = message;
-        Show(message);
+        errorSMS.text += message;
+        //Show(message);
     }
     public void Info(string message)
     {
         errorSMS.textComponent.color = Color.green;
 
         errorSMS.text += message;
-        Show(message);
+        //Show(message);
     }
     public void Show(string text)
     {

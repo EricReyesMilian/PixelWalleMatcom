@@ -6,7 +6,9 @@ public class SemanticException
 
     public void Report(string error, int line, int column)
     {
-        Errors.Add($"Error semantico en Línea {line}, Columna {column}: {error}");
+        string message = $"Error semantico en Línea {line}, Columna {column}: {error}";
+        ErrorHandler.errorHandler.AddError(message);
+        Errors.Add(message);
     }
 
     public bool HasErrors => Errors.Count > 0;

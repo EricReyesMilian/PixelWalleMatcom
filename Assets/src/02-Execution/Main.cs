@@ -25,9 +25,9 @@ public class Main : MonoBehaviour
     {
         Lexer lexer = new Lexer(codeRaw);
         List<Token> tokens = lexer.Tokenize();
-        Parser parser = new Parser(tokens);
-        List<ASTNode> ast = parser.Parse();
-        Interpreter interpreter = new Interpreter(ast);
-        CanvasGrid.Draw();
+        // Parser parser = new Parser(tokens);
+        // List<ASTNode> ast = parser.Parse();
+        // Interpreter interpreter = new Interpreter(ast);
+        // CanvasGrid.Draw();
     }
 }

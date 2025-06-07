@@ -33,7 +33,7 @@ public class Lexer
     }
     public List<Token> Tokenize()
     {
-        Token? token;
+        Token token;
 
         do
         {
@@ -99,7 +99,22 @@ public class Lexer
         _line++;
         _column = 1;
 
-        return new Token(TokenType.Jump, " ", startLine, startCol);
+        return ScanToken(TokenType.Jump, " ", startLine, startCol);
+    }
+    private Token ScanToken(TokenType type, string value, int line, int column)
+    {
+        if (IsValid(value))
+        {
+            return new Token(type, value, line, column);
+
+        }
+        else
+        {
+            Exception.Report($"Carácter inesperado en: '{value}'", _line, _column);
+            //_position++;
+            return new Token(TokenType.Null, " ", _line, _column);
+
+        }
     }
     private Token ReadColor()
     {
@@ -121,27 +136,8 @@ public class Lexer
         string value = _input.Substring(start, _position - start);
 
         //agregar esto a todos los metodos
-        if (IsValid(value))
-        {
-            return new Token(TokenType.Color, value, startLine, startCol);
+        return ScanToken(TokenType.Color, value, startLine, startCol);
 
-        }
-        else
-        {
-            Exception.Report($"Carácter inesperado: '{value}'", _line, _column);
-            _position++;
-            return new Token(TokenType.Null, " ", _line, _column++);
-
-        }
-        // if (_colors.Contains(value))
-        // {
-        //     return new Token(TokenType.Color, value, startLine, startCol);
-
-        // }
-        // else
-        // {
-        //     throw new Exception($"{value} no es un color valido");
-        // }
 
     }
     private Token ReadOperator()
@@ -158,7 +154,7 @@ public class Lexer
             if (_operators.Contains(doubleOp))
             {
                 Advance();
-                return new Token(TokenType.Operator, doubleOp, currentLine, currentCol);
+                return ScanToken(TokenType.Operator, doubleOp, currentLine, currentCol);
             }
         }
         else if (op == '-' && char.IsDigit(_input[_position]))
@@ -166,7 +162,7 @@ public class Lexer
             _position--;
             return ReadNumber();
         }
-        return new Token(TokenType.Operator, op.ToString(), currentLine, currentCol);
+        return ScanToken(TokenType.Operator, op.ToString(), currentLine, currentCol);
     }
     private Token ReadNumber()
     {
@@ -192,29 +188,20 @@ public class Lexer
 
         }
 
-        try
+        if (!_NoVoidFunction.Contains(value))
         {
-            if (!_NoVoidFunction.Contains(value))
-            {
 
-                int a = Convert.ToInt32(value);
-
-                return new Token(TokenType.Number, a.ToString(), startLine, startCol);
+            return ScanToken(TokenType.Number, value, startLine, startCol);
 
 
 
 
 
-            }
-            else
-            {
-                return new Token(TokenType.Function, value, startLine, startCol);
-
-            }
         }
-        catch
+        else
         {
-            throw new Exception($"{value} no es un numero valido");
+            return ScanToken(TokenType.Function, value, startLine, startCol);
+
         }
     }
     private Token ReadIdentifier()
@@ -252,7 +239,7 @@ public class Lexer
 
         }
 
-        return new Token(type, value, startLine, startCol);
+        return ScanToken(type, value, startLine, startCol);
     }
     private Token ReadPunctuation()
     {
@@ -260,7 +247,7 @@ public class Lexer
         int currentLine = _line;
         int currentCol = _column;
         Advance();
-        return new Token(TokenType.Punctuation, punct.ToString(), currentLine, currentCol);
+        return ScanToken(TokenType.Punctuation, punct.ToString(), currentLine, currentCol);
     }
 
     #endregion
