@@ -9,7 +9,7 @@ public class Lexer
     private int _column = 1;
     public LexicalException Exception = new LexicalException();
     List<Token> tokens = new();
-
+    public delegate bool EvaluateToken(string value);
     //Palabras clave, debe contener a todas las funciones con retorno de valor
     private readonly HashSet<string> _keywords = new()
     { "GoTo", "Spawn", "Color", "Size", "DrawLine", "DrawCircle", "DrawRectangle", "Fill", };
@@ -99,23 +99,10 @@ public class Lexer
         _line++;
         _column = 1;
 
-        return ScanToken(TokenType.Jump, " ", startLine, startCol);
+        return ScanToken(TokenType.Jump, " ", startLine, startCol, IsValid);
     }
-    private Token ScanToken(TokenType type, string value, int line, int column)
-    {
-        if (IsValid(value))
-        {
-            return new Token(type, value, line, column);
 
-        }
-        else
-        {
-            Exception.Report($"Carácter inesperado en: '{value}'", _line, _column);
-            //_position++;
-            return new Token(TokenType.Null, " ", _line, _column);
 
-        }
-    }
     private Token ReadColor()
     {
         int start = _position;
@@ -136,7 +123,7 @@ public class Lexer
         string value = _input.Substring(start, _position - start);
 
         //agregar esto a todos los metodos
-        return ScanToken(TokenType.Color, value, startLine, startCol);
+        return ScanToken(TokenType.Color, value, startLine, startCol, IsValidColor);
 
 
     }
@@ -154,7 +141,7 @@ public class Lexer
             if (_operators.Contains(doubleOp))
             {
                 Advance();
-                return ScanToken(TokenType.Operator, doubleOp, currentLine, currentCol);
+                return ScanToken(TokenType.Operator, doubleOp, currentLine, currentCol, IsValidOperator);
             }
         }
         else if (op == '-' && char.IsDigit(_input[_position]))
@@ -162,7 +149,7 @@ public class Lexer
             _position--;
             return ReadNumber();
         }
-        return ScanToken(TokenType.Operator, op.ToString(), currentLine, currentCol);
+        return ScanToken(TokenType.Operator, op.ToString(), currentLine, currentCol, IsValidOperator);
     }
     private Token ReadNumber()
     {
@@ -175,13 +162,12 @@ public class Lexer
         }
         while (_position < _input.Length && _input[_position] != ' ' && !_operators.Contains(_input[_position].ToString()) && _input[_position] != '\n' && !_punctuation.Contains(_input[_position]))
         {
-            // if ()
             Advance();
 
         }
 
         string value = _input.Substring(start, _position - start);
-        if (_input[_position - 1] == '\n')
+        if (_input[_position] == '\n')
         {
             value = _input.Substring(start, (_position - 1) - start);
             _position -= 1;
@@ -190,17 +176,11 @@ public class Lexer
 
         if (!_NoVoidFunction.Contains(value))
         {
-
-            return ScanToken(TokenType.Number, value, startLine, startCol);
-
-
-
-
-
+            return ScanToken(TokenType.Number, value, startLine, startCol, IsValidNumber);
         }
         else
         {
-            return ScanToken(TokenType.Function, value, startLine, startCol);
+            return ScanToken(TokenType.Function, value, startLine, startCol, IsValidFunction);
 
         }
     }
@@ -221,25 +201,29 @@ public class Lexer
             if (_NoVoidFunction.Contains(value))
             {
                 type = TokenType.Function;
+                return ScanToken(type, value, startLine, startCol, IsValidFunction);
+
             }
             else
             {
                 type = TokenType.Keyword;
+                if (value == "GoTo")
+                {
+                    type = TokenType.Goto;
+                }
+                return ScanToken(type, value, startLine, startCol, IsValidKeyWord);
 
             }
-            if (value == "GoTo")
-            {
-                type = TokenType.Goto;
-            }
+
         }
         else
         {
 
             type = TokenType.Identifier;
+            return ScanToken(type, value, startLine, startCol, IsValidIdenti);
 
         }
 
-        return ScanToken(type, value, startLine, startCol);
     }
     private Token ReadPunctuation()
     {
@@ -247,7 +231,7 @@ public class Lexer
         int currentLine = _line;
         int currentCol = _column;
         Advance();
-        return ScanToken(TokenType.Punctuation, punct.ToString(), currentLine, currentCol);
+        return ScanToken(TokenType.Punctuation, punct.ToString(), currentLine, currentCol, IsValidPunctuation);
     }
 
     #endregion
@@ -273,7 +257,7 @@ public class Lexer
             _position++;
         }
     }
-    public static bool IsValid(string input)
+    bool IsValid(string input)
     {
         // Caracteres considerados inválidos
         string invalidChars = "#@!$~;:'^";
@@ -288,7 +272,96 @@ public class Lexer
 
         return true; // Todos los caracteres son válidos
     }
+    bool IsValidNumber(string input)
+    {
+        // Caracteres considerados inválidos
+        string validChars = "1234567890";
 
+        for (int i = 0; i < input.Length; i++)
+        {
+            if (i == 0 && input[0] == '-')
+            {
+                continue;
+            }
+            if (!validChars.Contains(input[i]))
+            {
+                return false;
+            }
+        }
 
+        return true; // Todos los caracteres son válidos
+    }
+    bool IsValidIdenti(string input)
+    {
+        // Caracteres considerados inválidos
+        string frist = "1234567890-";
+        if (frist.Contains(input[0]))
+        {
+            return false;
+        }
+
+        return true; // Todos los caracteres son válidos
+    }
+    bool IsValidPunctuation(string input)
+    {
+        // Caracteres considerados inválidos
+        if (_punctuation.Contains(input[0]))
+        {
+            return true;
+        }
+
+        return false; // Todos los caracteres son válidos
+    }
+    bool IsValidColor(string input)
+    {
+        if (!_colors.Contains(input))
+        {
+            return false;
+        }
+
+        return true; // Todos los caracteres son válidos
+    }
+    bool IsValidOperator(string input)
+    {
+        if (!_operators.Contains(input))
+        {
+            return false;
+        }
+
+        return true; // Todos los caracteres son válidos
+    }
+    bool IsValidFunction(string input)
+    {
+        if (!_NoVoidFunction.Contains(input))
+        {
+            return false;
+        }
+
+        return true; // Todos los caracteres son válidos
+    }
+    bool IsValidKeyWord(string input)
+    {
+        if (!_keywords.Contains(input))
+        {
+            return false;
+        }
+
+        return true; // Todos los caracteres son válidos
+    }
+    private Token ScanToken(TokenType type, string value, int line, int column, EvaluateToken isValid)
+    {
+        if (isValid(value))
+        {
+            return new Token(type, value, line, column);
+
+        }
+        else
+        {
+            Exception.Report($"Carácter inesperado en: '{value}' ", _line, _column);
+            //_position++;
+            return new Token(TokenType.Null, " ", _line, _column);
+
+        }
+    }
     #endregion
 }

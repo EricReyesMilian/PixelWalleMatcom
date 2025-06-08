@@ -91,16 +91,7 @@ public class Parser
         if (Match(TokenType.Keyword) || Match(TokenType.Function))
         {
             Token kw = tokensByLine[_currentLine][_currentPosition];
-            if (Match(TokenType.Function))
-            {
-                if (_currentPosition - 1 > 0)
-                {
-                    if (tokensByLine[_currentLine][_currentPosition - 1].Value == " ")
-                    {
-                        throw new Exception($"Debes declarar una instruccion {Peek()}");
-                    }
-                }
-            }
+
             Consume(); // Consume la funcion
 
             ASTNode parametro = new FunctionNode(kw, GetParams());
@@ -307,6 +298,19 @@ public class Parser
 
         return left;
     }
+
+    private ASTNode ParseLogic()
+    {
+        var left = ParseComparer();
+
+        while (Match(TokenType.Operator, "&&") || Match(TokenType.Operator, "||"))
+        {
+            var opToken = Consume();
+            var right = ParseComparer();
+            left = new BinaryOperatorNode(opToken, left, right);
+        }
+        return left;
+    }
     private ASTNode ParseComparer()
     {
         var left = ParseFactor();
@@ -317,18 +321,6 @@ public class Parser
         {
             var opToken = Consume();
             var right = ParseFactor();
-            left = new BinaryOperatorNode(opToken, left, right);
-        }
-        return left;
-    }
-    private ASTNode ParseLogic()
-    {
-        var left = ParseComparer();
-
-        while (Match(TokenType.Operator, "&&") || Match(TokenType.Operator, "||"))
-        {
-            var opToken = Consume();
-            var right = ParseComparer();
             left = new BinaryOperatorNode(opToken, left, right);
         }
         return left;
@@ -344,6 +336,7 @@ public class Parser
             }
             else if (Match(TokenType.Function))
             {
+
                 return new FunctionNode(Consume(), GetParams());
             }
             else
@@ -398,7 +391,6 @@ public class Parser
 
         return true;
     }
-
 
     private Token Consume()
     {

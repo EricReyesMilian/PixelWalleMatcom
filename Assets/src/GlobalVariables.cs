@@ -17,6 +17,17 @@ public static class GlobalVariables
 {
 
     public static (int, int) walle;
+    public static List<string> colors = new List<string> {
+         "\"Transparent\"",
+            "\"Blue\"",
+            "\"Red\"",
+            "\"Green\"",
+            "\"Yellow\"",
+            "\"Orange\"",
+            "\"Purple\"",
+            "\"Black\"",
+            "\"White\"",
+    };
     public static Dictionary<Colors, (float, float, float, float)> brushColor = new Dictionary<Colors, (float, float, float, float)>()
     {
         { Colors.Transparent, (0,0,0,0) },

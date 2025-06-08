@@ -29,12 +29,16 @@ public class Main : MonoBehaviour
 
         Lexer lexer = new Lexer(codeRaw);
         List<Token> tokens = lexer.Tokenize();
-        Parser parser = new Parser(tokens);
-        List<ASTNode> ast = parser.Parse();
-        foreach (var rama in ast)
+        if (!lexer.Exception.HasErrors)
         {
-            rama.PrintTree();
+            Parser parser = new Parser(tokens);
+            List<ASTNode> ast = parser.Parse();
+            foreach (var rama in ast)
+            {
+                rama.PrintTree();
+            }
+            Interpreter interpreter = new Interpreter(ast);
+
         }
-        Interpreter interpreter = new Interpreter(ast);
     }
 }
