@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-public class SemanticException
+public class SintacticException
 {
     public List<string> Errors { get; } = new List<string>();
 

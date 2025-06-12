@@ -37,7 +37,11 @@ public class Main : MonoBehaviour
             {
                 rama.PrintTree();
             }
-            Interpreter interpreter = new Interpreter(ast);
+            if (!parser.sintacticException.HasErrors)
+            {
+                Interpreter interpreter = new Interpreter(ast);
+
+            }
 
         }
     }

@@ -8,14 +8,12 @@ public class Parser
     private int _currentPosition;
     List<ASTNode> block = new List<ASTNode>();
     List<List<Token>> tokensByLine = new List<List<Token>>();
-    private SemanticException semanticException = new SemanticException();
+    public SintacticException sintacticException = new SintacticException();
     bool errorInLine = false;
     // en caso de error saltar la linea q se esta procesando
     public Parser(List<Token> tokens)
     {
         this.tokens = tokens;
-
-
     }
 
     public List<ASTNode> Parse()
@@ -30,29 +28,25 @@ public class Parser
                 {
                     errorInLine = false;
                     ASTNode proccesNode = ParseKeyW();
-                    if (!errorInLine)
+                    try
                     {
                         block.Add(proccesNode);
+
+                    }
+                    catch (Exception e)
+                    {
+                        sintacticException.Report(e.Message, _currentLine, _currentPosition);
+                        break;
+                    }
+
+                    if (!errorInLine)
+                    {
 
                     }
                 }
             }
 
         }
-        // for (int i = 0; i < tokensByLine[_currentLine].Count; i++)
-        // {
-        //     if (tokensByLine[_currentLine][_currentPosition].Value != " " && tokensByLine[_currentLine][_currentPosition].Type != TokenType.Null)
-        //     {
-        //         errorInLine = false;
-        //         ASTNode proccesNode = ParseKeyW();
-        //         if (!errorInLine)
-        //         {
-        //             block.Add(proccesNode);
-
-        //         }
-        //     }
-        //     i = ++_currentPosition;
-        // }
         return block;
     }
     private List<List<Token>> ProccesTokensByLine(List<Token> tokens)
@@ -361,7 +355,7 @@ public class Parser
             return expr;
         }
 
-        throw new Exception($"Token inesperado: {Peek()}");
+        throw new Exception($"Se esperaba una expresion Token inesperado: {Peek()}");
     }
     private ASTNode ParseColor()
     {
