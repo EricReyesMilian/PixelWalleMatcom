@@ -1,15 +1,11 @@
 using System;
-using System.Collections.Generic;
-public class SintacticException
+public class SemanticException : Exception
 {
-    public List<string> Errors { get; } = new List<string>();
+    public string ErrorDetails { get; }
 
-    public void Report(string error, int line, int column)
+    public SemanticException(string message)
+        : base($"Error semantico : {message}")
     {
-        string message = $"Error semantico en Línea {line}, Columna {column}: {error}";
-        ErrorHandler.errorHandler.AddError(message);
-        Errors.Add(message);
+        ErrorDetails = message;
     }
-
-    public bool HasErrors => Errors.Count > 0;
 }

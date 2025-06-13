@@ -2,11 +2,19 @@ using System.Collections.Generic;
 using System;
 public class FunctionNode : ASTNode
 {
-    List<ASTNode> param = new List<ASTNode>();
+    public List<ASTNode> param = new List<ASTNode>();
     public FunctionNode(Token token, List<ASTNode> param) : base(token)
     {
         this.param = param;
 
+    }
+    public bool CheckParam()
+    {
+        return FunctionManager.CheckParams(token, param);
+    }
+    public int GetParamsCount()
+    {
+        return param.Count;
     }
     public override object Execute()
     {

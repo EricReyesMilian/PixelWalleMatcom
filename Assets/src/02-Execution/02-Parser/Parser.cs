@@ -8,8 +8,7 @@ public class Parser
     private int _currentPosition;
     List<ASTNode> block = new List<ASTNode>();
     List<List<Token>> tokensByLine = new List<List<Token>>();
-    public SintacticException sintacticException = new SintacticException();
-    bool errorInLine = false;
+    public SemanticExceptionHandler sintacticException = new SemanticExceptionHandler();
     // en caso de error saltar la linea q se esta procesando
     public Parser(List<Token> tokens)
     {
@@ -26,23 +25,19 @@ public class Parser
             {
                 if (tokensByLine[_currentLine][_currentPosition].Value != " " && tokensByLine[_currentLine][_currentPosition].Type != TokenType.Null && tokensByLine[_currentLine][_currentPosition].Type != TokenType.END)
                 {
-                    errorInLine = false;
-                    ASTNode proccesNode = ParseKeyW();
                     try
                     {
+                        ASTNode proccesNode = ParseKeyW();
                         block.Add(proccesNode);
 
                     }
-                    catch (Exception e)
+                    catch (SyntaxException e)
                     {
                         sintacticException.Report(e.Message, _currentLine, _currentPosition);
                         break;
                     }
 
-                    if (!errorInLine)
-                    {
 
-                    }
                 }
             }
 
@@ -78,7 +73,7 @@ public class Parser
                 }
             }
         }
-        throw new Exception($"{labelName} no es un label valido {Peek()}");
+        throw new SyntaxException($"{labelName} no es un label valido {Peek()}");
     }
     private ASTNode ParseKeyW()
     {
@@ -135,32 +130,32 @@ public class Parser
                             }
                             else
                             {
-                                throw new Exception($"Se esperaba ) {Peek()}");
+                                throw new SyntaxException($"Se esperaba ) {Peek()}");
 
                             }
                         }
                         else
                         {
-                            throw new Exception($"Se esperaba ( {Peek()}");
+                            throw new SyntaxException($"Se esperaba ( {Peek()}");
 
                         }
 
                     }
                     else
                     {
-                        throw new Exception($"Se esperaba ] {Peek()}");
+                        throw new SyntaxException($"Se esperaba ] {Peek()}");
 
                     }
                 }
                 else
                 {
-                    throw new Exception($"Se esperaba un Label {Peek()}");
+                    throw new SyntaxException($"Se esperaba un Label {Peek()}");
                 }
             }
             else
             {
 
-                throw new Exception($"Se esperaba [ {Peek()}");
+                throw new SyntaxException($"Se esperaba [ {Peek()}");
             }
         }
         else
@@ -183,9 +178,18 @@ public class Parser
                 //controlar out of index
                 ASTNode right;
 
-                right = ParseSum();
+                try
+                {
+                    right = ParseSum();
 
-                return new AssingNode(op, new VariableNode(variable), right);
+                    return new AssingNode(op, new VariableNode(variable), right);
+
+                }
+                catch
+                {
+                    throw new SyntaxException($"Error en la asignacion de la variable {Peek()}");
+
+                }
             }
             else
             {
@@ -196,22 +200,19 @@ public class Parser
         else
         {
 
-            throw new Exception($"Se Esperaba una instruccion {Peek()}");
+            throw new SyntaxException($"Se Esperaba una instruccion {Peek()}");
         }
     }
     private ASTNode ParseLabel()
     {
         if (tokensByLine[_currentLine][_currentPosition + 1].Type == TokenType.Jump || tokensByLine[_currentLine][_currentPosition + 1].Type == TokenType.END)
         {
-            if (FunctionManager.labels.ContainsKey(tokensByLine[_currentLine][_currentPosition].Value))
-            {
-                throw new Exception($"Ese label ya estaba declarado {Peek()}");
-            }
+
             FunctionManager.labels.Add(tokensByLine[_currentLine][_currentPosition].Value, block.Count);
             return new LabelNode(tokensByLine[_currentLine][_currentPosition], block.Count);
         }
         else
-            throw new Exception($"Se esperaba una instruccion {Peek()}");
+            throw new SyntaxException($"Se esperaba una instruccion {Peek()}");
     }
     private List<ASTNode> GetParams()
     {
@@ -239,7 +240,7 @@ public class Parser
                 }
                 else
                 {
-                    throw new Exception($"Se esperaba ',' se encontro {Peek()}");
+                    throw new SyntaxException($"Se esperaba ',' se encontro {Peek()}");
 
                 }
             }
@@ -248,7 +249,7 @@ public class Parser
         }
 
         if (!Match(TokenType.Punctuation, ")"))
-            throw new Exception($"Se esperaba ')'{Peek()}");
+            throw new SyntaxException($"Se esperaba ')'{Peek()}");
         Consume(); // Consume ')'
 
         return param;
@@ -350,12 +351,12 @@ public class Parser
             Consume(); // Consume '('
             var expr = ParseSum();
             if (!Match(TokenType.Punctuation, ")"))
-                throw new Exception($"Se esperaba ')' no: {Peek()}");
+                throw new SyntaxException($"Se esperaba ')' no: {Peek()}");
             Consume(); // Consume ')'
             return expr;
         }
 
-        throw new Exception($"Se esperaba una expresion Token inesperado: {Peek()}");
+        throw new SyntaxException($"Se esperaba una expresion Token inesperado: {Peek()}");
     }
     private ASTNode ParseColor()
     {
@@ -365,7 +366,7 @@ public class Parser
         }
         else
         {
-            throw new Exception($"Color inesperado: {Peek()}");
+            throw new SyntaxException($"Color inesperado: {Peek()}");
 
         }
     }
@@ -394,6 +395,6 @@ public class Parser
     private Token Peek()
     {
 
-        return _currentPosition < tokensByLine[_currentLine].Count ? tokensByLine[_currentLine][_currentPosition] : throw new Exception("Fuera de los limites");
+        return _currentPosition < tokensByLine[_currentLine].Count ? tokensByLine[_currentLine][_currentPosition] : throw new SyntaxException("Fuera de los limites");
     }
 }

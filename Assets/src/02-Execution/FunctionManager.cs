@@ -28,6 +28,25 @@ public static class FunctionManager
 
     };
     //chequeo de tipos
+    public static bool CheckParams(Token token, List<ASTNode> param)
+    {
+        string function = token.Value;
+        foreach (var fun in functions)
+        {
+            if (fun.GetName().Equals(function))
+            {
+
+            }
+        }
+        foreach (var fun in instruction)
+        {
+            if (fun.GetName().Equals(function))
+            {
+
+            }
+        }
+        return true;
+    }
     public static int CheckInt<T>(T x)
     {
         if (x is int intValue)
@@ -62,7 +81,18 @@ public static class FunctionManager
     //     }
     //     throw new Exception("Operacion binaria no detectada");
     // }
-
+    public static bool IsIntFunction(FunctionNode function)
+    {
+        string f = function.token.Value;
+        foreach (var fun in functions)
+        {
+            if (fun.GetName().Equals(f))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public static int GetIntFunction(string f, int[] arr)
     {
         foreach (var fun in functions)

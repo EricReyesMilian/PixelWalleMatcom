@@ -14,17 +14,17 @@ public abstract class BaseFunction
     {
         return name;
     }
-    public int[] CheckParam(int[] arr)
-    {
 
+    public bool CheckParam(int[] arr)
+    {
+        //agregar especificacion por funcion
         if (paramCount != arr.Length)
         {
-            throw new Exception($"Los parametros de {name} son incorrentos");
+            return false;
+
         }
-        else
-        {
-            return arr;
-        }
+        return true;
+
     }
     public int CheckColor(int color)
     {

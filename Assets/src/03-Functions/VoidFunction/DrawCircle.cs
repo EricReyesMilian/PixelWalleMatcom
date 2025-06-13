@@ -4,7 +4,6 @@ public class DrawCircle : VoidFunction
 
     public override void Execute(int[] arr)
     {
-        CheckParam(arr);
         _DrawCircle(CheckX(arr[0]), CheckY(arr[1]), arr[2]); // centerX, centerY, radius
     }
 

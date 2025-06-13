@@ -5,7 +5,6 @@ public class Fill : VoidFunction
 
     public override void Execute(int[] arr)
     {
-        CheckParam(arr);
         _Fill();
     }
 

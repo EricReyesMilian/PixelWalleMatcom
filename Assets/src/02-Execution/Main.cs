@@ -29,20 +29,21 @@ public class Main : MonoBehaviour
 
         Lexer lexer = new Lexer(codeRaw);
         List<Token> tokens = lexer.Tokenize();
-        if (!lexer.Exception.HasErrors)
-        {
-            Parser parser = new Parser(tokens);
-            List<ASTNode> ast = parser.Parse();
-            foreach (var rama in ast)
-            {
-                rama.PrintTree();
-            }
-            if (!parser.sintacticException.HasErrors)
-            {
-                Interpreter interpreter = new Interpreter(ast);
 
-            }
+        Parser parser = new Parser(tokens);
+        List<ASTNode> ast = parser.Parse();
+        foreach (var rama in ast)
+        {
+            rama.PrintTree();
+        }
+        SemanticCheck semanticCheck = new SemanticCheck(ast);
+        semanticCheck.Analyze();
+        if (!parser.sintacticException.HasErrors && !semanticCheck.error.HasErrors && !lexer.Exception.HasErrors)
+        {
+            Interpreter interpreter = new Interpreter(ast);
 
         }
+
+
     }
 }

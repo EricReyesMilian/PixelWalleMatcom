@@ -7,7 +7,7 @@ public class LexicalException
 
     public void Report(string error, int line, int column)
     {
-        string message = $"Error Lexico en Línea {line}, Columna {column}: {error}";
+        string message = $"Error Lexico en Línea {line}, Columna {column}: {error} \n";
         ErrorHandler.errorHandler.AddError(message);
         Errors.Add(message);
 

@@ -5,7 +5,6 @@ public class DrawRectangle : VoidFunction
 
     public override void Execute(int[] arr)
     {
-        CheckParam(arr);
         _DrawRectangle(arr[0], arr[1], arr[2], arr[3], arr[4]);
     }
 

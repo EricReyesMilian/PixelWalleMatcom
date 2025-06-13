@@ -23,6 +23,7 @@ public class BinaryOperatorNode : ASTNode
 
         switch (token.Value)
         {
+            //chequear que no sean colores
             case "+": return FunctionManager.CheckInt(leftVal) + FunctionManager.CheckInt(rightVal);
             case "-": return FunctionManager.CheckInt(leftVal) - FunctionManager.CheckInt(rightVal);
             case "*": return FunctionManager.CheckInt(leftVal) * FunctionManager.CheckInt(rightVal);

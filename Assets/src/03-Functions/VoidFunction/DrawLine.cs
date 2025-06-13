@@ -3,7 +3,6 @@ public class DrawLine : VoidFunction
     public DrawLine() : base("DrawLine", 3) { }
     public override void Execute(int[] arr)
     {
-        CheckParam(arr);
         _DrawLine(arr[0], arr[1], arr[2]);
     }
     private void _DrawLine(int xDir, int yDir, int dist)
