@@ -16,7 +16,7 @@ public class ColorNode : ASTNode
             "\"Purple\"" => 6,
             "\"Black\"" => 7,
             "\"White\"" => 8,
-            _ => throw new Exception($"Color no soportado: {token.Value}")
+            _ => throw new RunTimeException($"Color no soportado: {token.Value}")
 
         };
     }

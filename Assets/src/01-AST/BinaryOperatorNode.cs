@@ -27,7 +27,12 @@ public class BinaryOperatorNode : ASTNode
             case "+": return FunctionManager.CheckInt(leftVal) + FunctionManager.CheckInt(rightVal);
             case "-": return FunctionManager.CheckInt(leftVal) - FunctionManager.CheckInt(rightVal);
             case "*": return FunctionManager.CheckInt(leftVal) * FunctionManager.CheckInt(rightVal);
-            case "/": return FunctionManager.CheckInt(leftVal) / FunctionManager.CheckInt(rightVal);
+            case "/":
+                if (FunctionManager.CheckInt(rightVal) == 0)
+                {
+                    throw new RunTimeException($"Intentaste dividir por cero: {token.Value}");
+                }
+                return FunctionManager.CheckInt(leftVal) / FunctionManager.CheckInt(rightVal);
             case "**": return FunctionManager.CheckInt((int)Math.Round(Math.Pow(FunctionManager.CheckInt(leftVal), FunctionManager.CheckInt(rightVal))));
             case "%": return FunctionManager.CheckInt(leftVal) % FunctionManager.CheckInt(rightVal);
 
@@ -39,7 +44,7 @@ public class BinaryOperatorNode : ASTNode
             case "&&": return FunctionManager.CheckBool(leftVal) && FunctionManager.CheckBool(rightVal);
             case "||": return FunctionManager.CheckBool(leftVal) || FunctionManager.CheckBool(rightVal);
 
-            default: throw new Exception($"Operador no soportado: {token.Value}");
+            default: throw new RunTimeException($"Operador no soportado: {token.Value}");
         }
     }
 

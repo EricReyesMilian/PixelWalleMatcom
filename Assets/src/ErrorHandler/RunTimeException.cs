@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-public class RunTimeException
+public class RunTimeException : Exception
 {
-    public List<string> Errors { get; } = new List<string>();
+    public string ErrorDetails { get; }
 
-    public void Report(string error, int line, int column)
+    public RunTimeException(string message)
+        : base($"Error en tiempo de ejecucion : {message}")
     {
-        Errors.Add($"Error en tiempo de ejecucion en Línea {line}, Columna {column}: {error}");
+        ErrorDetails = message;
     }
-
-    public bool HasErrors => Errors.Count > 0;
 }

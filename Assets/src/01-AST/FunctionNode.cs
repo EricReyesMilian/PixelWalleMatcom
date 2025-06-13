@@ -33,15 +33,10 @@ public class FunctionNode : ASTNode
             int[] par = new int[param.Count];
             for (int i = 0; i < param.Count; i++)
             {
-                try
-                {
-                    par[i] = (int)param[i].Execute();
 
-                }
-                catch
-                {
-                    throw new Exception("Se esta tomando un valor booleano en vez de uno entero");
-                }
+                par[i] = (int)param[i].Execute();
+
+
             }
             FunctionManager.GetVoidFunction(token.Value, par);
             return null;

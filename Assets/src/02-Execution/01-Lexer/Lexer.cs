@@ -7,7 +7,7 @@ public class Lexer
     private int _position;
     private int _line = 1;
     private int _column = 1;
-    public LexicalException Exception = new LexicalException();
+    public LexicalExceptionHandler Exception = new LexicalExceptionHandler();
     List<Token> tokens = new();
     public delegate bool EvaluateToken(string value);
     //Palabras clave, debe contener a todas las funciones con retorno de valor
@@ -41,11 +41,7 @@ public class Lexer
             token = GetNextToken();
             if (tokens != null)
                 tokens.Add(token);
-            // if (tokens[0].Value != "Spawn")
-            // {
-            //     Exception.Report("El codigo debe empezar con la instruccion Spawn", tokens[0]);
-            //     //throw new Exception("El codigo debe empezar con la instruccion Spawn");
-            // }
+
         } while (token.Type != TokenType.END);
 
         return tokens;
@@ -76,7 +72,6 @@ public class Lexer
         Exception.Report($"Carácter inesperado: '{current}'", _line, _column);
         _position++;
         return new Token(TokenType.Null, " ", _line, _column++);
-        //throw new Exception($"Carácter inesperado: '{current}' {_line}, {_column}");
 
     }
 

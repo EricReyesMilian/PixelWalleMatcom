@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+public class RunTimeExceptionHandler
+{
+    public List<string> Errors { get; } = new List<string>();
+
+    public void Report(string error, int line, int column)
+    {
+
+        string message = $"Error en tiempo de ejecucion en Línea {line}, Columna {column}: {error}\n";
+        ErrorHandler.errorHandler.AddError(message);
+        Errors.Add(message);
+
+    }
+
+    public bool HasErrors => Errors.Count > 0;
+}

@@ -9,7 +9,7 @@ public class VariableNode : ASTNode
         {
             return value;
         }
-        throw new Exception($"Variable no definida: {token.Value}");
+        throw new RunTimeException($"Variable no definida: {token.Value}");
     }
 
 }

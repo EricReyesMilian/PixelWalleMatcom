@@ -36,7 +36,7 @@ public abstract class BaseFunction
         }
         else
         {
-            throw new Exception($"El parametro de {name} no es un color valido");
+            throw new RunTimeException($"El parametro de {name} no es un color valido");
         }
     }
     public int CheckX(int x)
@@ -47,7 +47,7 @@ public abstract class BaseFunction
         }
         else
         {
-            throw new Exception($"El parametro X de {name} se sale de los limites del canvas");
+            throw new RunTimeException($"El parametro X de {name} se sale de los limites del canvas");
         }
     }
     public int CheckY(int y)
@@ -58,7 +58,7 @@ public abstract class BaseFunction
         }
         else
         {
-            throw new Exception($"El parametro Y de {name} se sale de los limites del canvas");
+            throw new RunTimeException($"El parametro Y de {name} se sale de los limites del canvas");
         }
     }
 

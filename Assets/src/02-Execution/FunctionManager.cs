@@ -97,18 +97,6 @@ public static class FunctionManager
         throw new ArgumentException($"Se esperaba un valor booleano pero se recibió {x?.GetType().Name ?? "null"}");
     }
 
-    //retorno de funciones por nombre
-    // public static bool GetBinaryBoolOperator(string f, object left, object right)
-    // {
-    //     foreach (var fun in binaryBoolFunctions)
-    //     {
-    //         if (fun.GetName().Equals(f))
-    //         {
-    //             return fun.Execute(left, right);
-    //         }
-    //     }
-    //     throw new Exception("Operacion binaria no detectada");
-    // }
     public static bool IsIntFunction(FunctionNode function)
     {
         string f = function.token.Value;
@@ -130,7 +118,7 @@ public static class FunctionManager
                 return fun.Execute(arr);
             }
         }
-        throw new Exception($"Funcion {f} de retorno entero no detectada");
+        throw new RunTimeException($"Funcion {f} de retorno entero no detectada");
     }
     public static void GetVoidFunction(string f, int[] arr)
     {
@@ -145,7 +133,7 @@ public static class FunctionManager
             }
         }
         if (!found)
-            throw new Exception($"Funcion {f} de retorno vacio no detectada");
+            throw new RunTimeException($"Funcion {f} de retorno vacio no detectada");
 
 
     }
