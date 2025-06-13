@@ -1,6 +1,6 @@
 public class IsCanvasColor : IntFunction
 {
-    public IsCanvasColor() : base("IsCanvasColor", 3) { }
+    public IsCanvasColor() : base("IsCanvasColor", 3, new int[] { 2, 1, 1 }) { }
     public override int Execute(int[] arr)
     {
         CheckParam(arr);

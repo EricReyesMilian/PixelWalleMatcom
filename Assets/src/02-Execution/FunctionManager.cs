@@ -28,21 +28,49 @@ public static class FunctionManager
 
     };
     //chequeo de tipos
-    public static bool CheckParams(Token token, List<ASTNode> param)
+    public static bool CheckParams(string f, int[] arr)
     {
-        string function = token.Value;
+
         foreach (var fun in functions)
         {
-            if (fun.GetName().Equals(function))
+            if (fun.GetName().Equals(f))
             {
-
+                if (arr.Length != fun.parCod.Length)
+                {
+                    return false;
+                }
+                else
+                {
+                    for (int i = 0; i < fun.parCod.Length; i++)
+                    {
+                        if (arr[i] != fun.parCod[i])
+                        {
+                            return false;
+                        }
+                    }
+                }
+                break;
             }
         }
         foreach (var fun in instruction)
         {
-            if (fun.GetName().Equals(function))
+            if (fun.GetName().Equals(f))
             {
-
+                if (arr.Length != fun.parCod.Length)
+                {
+                    return false;
+                }
+                else
+                {
+                    for (int i = 0; i < fun.parCod.Length; i++)
+                    {
+                        if (arr[i] != fun.parCod[i])
+                        {
+                            return false;
+                        }
+                    }
+                }
+                break;
             }
         }
         return true;

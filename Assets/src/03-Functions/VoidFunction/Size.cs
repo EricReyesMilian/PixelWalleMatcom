@@ -1,6 +1,6 @@
 public class Size : VoidFunction
 {
-    public Size() : base("Size", 1) { }
+    public Size() : base("Size", 1, new int[] { 1 }) { }
     public override void Execute(int[] arr)
     {
         _Size(arr[0]);

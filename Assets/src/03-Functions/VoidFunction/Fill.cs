@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 public class Fill : VoidFunction
 {
-    public Fill() : base("Fill", 0) { }
+    public Fill() : base("Fill", 0, new int[] { }) { }
 
     public override void Execute(int[] arr)
     {

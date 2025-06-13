@@ -1,6 +1,6 @@
 public class DrawLine : VoidFunction
 {
-    public DrawLine() : base("DrawLine", 3) { }
+    public DrawLine() : base("DrawLine", 3, new int[] { 1, 1, 1 }) { }
     public override void Execute(int[] arr)
     {
         _DrawLine(arr[0], arr[1], arr[2]);

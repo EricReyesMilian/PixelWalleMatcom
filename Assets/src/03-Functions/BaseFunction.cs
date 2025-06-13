@@ -4,10 +4,12 @@ public abstract class BaseFunction
 {
     string name;
     private int paramCount;
-    public BaseFunction(string name, int paramCount)
+    public int[] parCod = { };//0 bool,1 num, 2 color
+    public BaseFunction(string name, int paramCount, int[] parCod)
     {
         this.name = name;
         this.paramCount = paramCount;
+        this.parCod = parCod;
 
     }
     public string GetName()

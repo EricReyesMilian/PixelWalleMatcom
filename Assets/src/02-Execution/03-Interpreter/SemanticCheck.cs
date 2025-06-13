@@ -92,17 +92,54 @@ public class SemanticCheck
                     error.Report($"El parametro {node.token.Value} no es un parametro valido", node.token.Line, node.token.Column);
                     return;
 
-                    ;
+
                     // Agrega más casos según tus nodos AST
             }
         }
 
-        if (!functionNode.CheckParam())
+        if (!functionNode.CheckParam(functionNode.token.Value, ParseParams(functionNode.param)))
         {
             error.Report($"Los Parametros de la funcion {functionNode.token.Value} son incorrectos", functionNode.token.Line, functionNode.token.Column);
         }
     }
+    public int[] ParseParams(List<ASTNode> p)
+    {
+        int[] result = new int[p.Count];
+        for (int i = 0; i < p.Count; i++)
+        {
+            switch (p[i])
+            {
+                case BinaryOperatorNode n:
+                    CheckBinary(n);
+                    if (CheckBool(n))
+                    {
+                        result[i] = 0;//bool
+                    }
+                    else
+                    {
+                        result[i] = 1;//number
+                    }
+                    break;
 
+                case VariableNode v:
+                    CheckVariable(v);
+                    result[i] = 1;//number
+                    break;
+                case ConstantNode c:
+                    CheckConstant(c);
+                    result[i] = 1;//number
+                    break;
+                case ColorNode o:
+
+                    result[i] = 2;//color
+                    break;
+                default:
+                    error.Report($"La expresion {p[i].token.Value} no es un parametro valido", p[i].token.Line, p[i].token.Column);
+                    break;
+            }
+        }
+        return result;
+    }
     public void CheckConstant(ConstantNode constantNode)
     {
 

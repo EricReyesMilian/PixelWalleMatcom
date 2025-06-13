@@ -1,6 +1,6 @@
 public class GetActualY : IntFunction
 {
-    public GetActualY() : base("GetActualY", 0) { }
+    public GetActualY() : base("GetActualY", 0, new int[] { }) { }
     public override int Execute(int[] arr)
     {
         CheckParam(arr);

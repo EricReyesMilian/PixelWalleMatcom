@@ -1,6 +1,6 @@
 public class IsBrushSize : IntFunction
 {
-    public IsBrushSize() : base("IsBrushSize", 1) { }
+    public IsBrushSize() : base("IsBrushSize", 1, new int[] { 1 }) { }
     public override int Execute(int[] arr)
     {
         CheckParam(arr);

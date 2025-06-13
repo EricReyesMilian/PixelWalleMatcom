@@ -1,6 +1,6 @@
 public class Spawn : VoidFunction
 {
-    public Spawn() : base("Spawn", 2) { }
+    public Spawn() : base("Spawn", 2, new int[] { 1, 1 }) { }
     public override void Execute(int[] arr)
     {
         _Spawn(CheckX(arr[0]), CheckY(arr[1]));

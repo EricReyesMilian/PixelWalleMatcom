@@ -1,6 +1,6 @@
 public class GetColorCount : IntFunction
 {
-    public GetColorCount() : base("GetColorCount", 5) { }
+    public GetColorCount() : base("GetColorCount", 5, new int[] { 2, 1, 1, 1, 1 }) { }
     public override int Execute(int[] arr)
     {
         CheckParam(arr);

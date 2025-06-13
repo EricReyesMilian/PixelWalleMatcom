@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+
 public class DrawCircle : VoidFunction
 {
-    public DrawCircle() : base("DrawCircle", 3) { } // Parámetros: centerX, centerY, radius
+    public DrawCircle() : base("DrawCircle", 3, new int[] { 1, 1, 1 }) { } // Parámetros: centerX, centerY, radius
 
     public override void Execute(int[] arr)
     {
+
         _DrawCircle(CheckX(arr[0]), CheckY(arr[1]), arr[2]); // centerX, centerY, radius
     }
 

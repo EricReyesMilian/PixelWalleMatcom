@@ -1,7 +1,7 @@
 using System;
 public class DrawRectangle : VoidFunction
 {
-    public DrawRectangle() : base("DrawRectangle", 5) { } // Parámetros: dirX, dirY, distance, width, height
+    public DrawRectangle() : base("DrawRectangle", 5, new int[] { 1, 1, 1, 1, 1 }) { } // Parámetros: dirX, dirY, distance, width, height
 
     public override void Execute(int[] arr)
     {

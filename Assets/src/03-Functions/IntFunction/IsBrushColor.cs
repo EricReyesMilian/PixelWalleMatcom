@@ -1,6 +1,6 @@
 public class IsBrushColor : IntFunction
 {
-    public IsBrushColor() : base("IsBrushColor", 1) { }
+    public IsBrushColor() : base("IsBrushColor", 1, new int[] { 2 }) { }
     public override int Execute(int[] arr)
     {
         CheckParam(arr);

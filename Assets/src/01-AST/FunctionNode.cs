@@ -8,9 +8,10 @@ public class FunctionNode : ASTNode
         this.param = param;
 
     }
-    public bool CheckParam()
+    public bool CheckParam(string name, int[] arr)
     {
-        return FunctionManager.CheckParams(token, param);
+        return FunctionManager.CheckParams(name, arr);
+
     }
     public int GetParamsCount()
     {
