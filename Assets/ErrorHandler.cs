@@ -4,7 +4,7 @@ using TMPro;
 public class ErrorHandler : MonoBehaviour
 {
     public static ErrorHandler errorHandler;
-    public TMP_InputField errorSMS;
+    public TextMeshProUGUI errorSMS;
     public Animator anim;
     bool onScreen;
     void Awake()
@@ -26,8 +26,7 @@ public class ErrorHandler : MonoBehaviour
     }
     public void Warning(string message)
     {
-        errorSMS.textComponent.color = Color.yellow;
-        errorSMS.text += message;
+        errorSMS.text += message + '\n';
         //Show(message);
 
     }
@@ -39,22 +38,20 @@ public class ErrorHandler : MonoBehaviour
     }
     public void Error(string message)
     {
-        errorSMS.textComponent.color = Color.red;
 
-        errorSMS.text += message;
-        //Show(message);
+        errorSMS.text += message + '\n';
     }
     public void Info(string message)
     {
-        errorSMS.textComponent.color = Color.green;
 
-        errorSMS.text += message;
+        errorSMS.text += message + '\n';
         //Show(message);
     }
-    public void Show(string text)
+    public void Show()
     {
 
         anim.SetTrigger("show");
+
         onScreen = true;
     }
     public void Close()

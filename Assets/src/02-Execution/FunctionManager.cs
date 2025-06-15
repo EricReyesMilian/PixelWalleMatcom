@@ -75,6 +75,7 @@ public static class FunctionManager
         }
         return true;
     }
+
     public static int CheckInt<T>(T x)
     {
         if (x is int intValue)

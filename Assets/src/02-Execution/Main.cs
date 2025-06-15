@@ -43,7 +43,8 @@ public class Main : MonoBehaviour
             Interpreter interpreter = new Interpreter(ast);
 
         }
-
+        ErrorHandler.errorHandler.Error("\n\n>>\n");
+        ErrorHandler.errorHandler.Show();
 
     }
 }

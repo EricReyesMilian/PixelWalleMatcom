@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 public class Interpreter
 {
     List<ASTNode> ast;
@@ -10,10 +12,10 @@ public class Interpreter
         rama = 0;
         while (rama < ast.Count)
         {
+            //necesito que aqui se espere una cantidad de tiemppo antes de ejecutar la siguiente instruccion
             try
             {
                 Interpretar(rama++);
-
             }
             catch (RunTimeException e)
             {

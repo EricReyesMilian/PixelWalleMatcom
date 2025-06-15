@@ -6,11 +6,12 @@ public class SemanticCheck
     public SemanticExceptionHandler error = new SemanticExceptionHandler();
     public static Dictionary<string, int> variables = new Dictionary<string, int>();
     public static Dictionary<string, int> labels = new Dictionary<string, int>();
-
+    bool Spawn = false;
     public SemanticCheck(List<ASTNode> ast)
     {
         variables.Clear();
         labels.Clear();
+        Spawn = false;
         _ast = ast;
     }
 
@@ -25,31 +26,58 @@ public class SemanticCheck
 
     private void VisitLineStart(ASTNode node)
     {
-        switch (node)
+        if (!Spawn)
         {
-            case FunctionNode f:
-                if (!FunctionManager.IsIntFunction(f))
+            if (node is FunctionNode)
+            {
+                if (node.token.Value == "Spawn")
                 {
-                    CheckFunction(f);
+                    Spawn = true;
                 }
                 else
                 {
-                    error.Report($"La funcion {f.token.Value} no representa una instruccion", f.token.Line, f.token.Column);
+                    Spawn = false;
+                    error.Report($"No se detecto la funcion Spawn", node.token.Line, node.token.Column);
 
                 }
-                break;
-            case AssingNode a:
-                CheckAssing(a);
-                break;
-            case LoopNode l:
-                CheckLoop(l);
-                break;
-            case LabelNode label:
-                SaveLabel(label);
-                break;
-            default:
-                error.Report($"El {node.token.Value} no es el inicio de una instruccion valida", node.token.Line, node.token.Column);
-                break;
+            }
+            else
+            {
+                Spawn = false;
+                error.Report($"No se detecto la funcion Spawn", node.token.Line, node.token.Column);
+
+            }
+        }
+        if (Spawn)
+        {
+            switch (node)
+            {
+                case FunctionNode f:
+                    if (!FunctionManager.IsIntFunction(f))
+                    {
+                        CheckFunction(f);
+                    }
+                    else
+                    {
+                        error.Report($"La funcion {f.token.Value} no representa una instruccion", f.token.Line, f.token.Column);
+
+                    }
+                    break;
+                case AssingNode a:
+                    CheckAssing(a);
+                    break;
+                case LoopNode l:
+                    CheckLoop(l);
+                    break;
+                case LabelNode label:
+                    SaveLabel(label);
+                    break;
+                default:
+                    error.Report($"El {node.token.Value} no es el inicio de una instruccion valida", node.token.Line, node.token.Column);
+                    break;
+            }
+
+
         }
     }
     //falta
