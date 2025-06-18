@@ -21,21 +21,8 @@ public class Display : MonoBehaviour
     {
         if (x < canvas.width && y < canvas.height)
         {
-            Color colorPixel = Color.white;
+            Color colorPixel = ColorHandler.GetColor(color);
 
-            switch (color)
-            {
-                case 0: colorPixel = new Color(0, 0, 0, 0); break;
-                case 1: colorPixel = Color.blue; break;
-                case 2: colorPixel = Color.red; break;
-                case 3: colorPixel = Color.green; break;
-                case 4: colorPixel = Color.yellow; break;
-                case 5: colorPixel = new Color(1, 0.5f, 0, 1); break;
-                case 6: colorPixel = new Color(0.5f, 0, 0.5f, 1); break;
-                case 7: colorPixel = Color.black; break;
-                case 8: colorPixel = Color.white; break;
-
-            }
             if (color != 0)
             {
                 canvas.SetPixel(x, y, colorPixel);

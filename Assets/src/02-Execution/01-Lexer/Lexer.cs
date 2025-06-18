@@ -17,8 +17,6 @@ public class Lexer
     private readonly HashSet<string> _NoVoidFunction = new()
     {"GetActualX", "GetActualY", "GetCanvasSize", "GetColorCount", "IsBrushColor", "IsBrushSize", "IsCanvasColor" };
     //Colores
-    private readonly HashSet<string> _colors = new()
-    { "\"Transparent\"", "\"Blue\"", "\"Red\"", "\"Green\"", "\"Yellow\"", "\"Orange\"", "\"Purple\"", "\"Black\"", "\"White\"" };
     // Operadores
     private readonly HashSet<string> _operators = new()
     { "+", "-", "*", "**", "%", "/", "<", ">", "<=", ">=", "==","=", "<-","&","|", "&&", "||" };
@@ -309,7 +307,7 @@ public class Lexer
     }
     bool IsValidColor(string input)
     {
-        if (!_colors.Contains(input))
+        if (!ColorHandler._colors.Contains(input))
         {
             return false;
         }

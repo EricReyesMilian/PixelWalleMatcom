@@ -36,14 +36,14 @@ public class SemanticCheck
                 }
                 else
                 {
-                    Spawn = false;
+                    Spawn = true;
                     error.Report($"No se detecto la funcion Spawn", node.token.Line, node.token.Column);
 
                 }
             }
             else
             {
-                Spawn = false;
+                Spawn = true;
                 error.Report($"No se detecto la funcion Spawn", node.token.Line, node.token.Column);
 
             }

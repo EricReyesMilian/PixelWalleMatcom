@@ -30,14 +30,9 @@ public abstract class BaseFunction
     }
     public int CheckColor(int color)
     {
-        if (color < 9 && color >= 0)
-        {
-            return color;
-        }
-        else
-        {
-            throw new RunTimeException($"El parametro de {name} no es un color valido");
-        }
+
+        return color;
+
     }
     public int CheckX(int x)
     {

@@ -21,14 +21,24 @@ public class Parser
         tokensByLine = ProccesTokensByLine(tokens);//explorar linea a linea
         for (_currentLine = 0; _currentLine < tokensByLine.Count; _currentLine++)
         {
+            bool instructionDetected = false;
             for (_currentPosition = 0; _currentPosition < tokensByLine[_currentLine].Count; _currentPosition++)
             {
                 if (tokensByLine[_currentLine][_currentPosition].Value != " " && tokensByLine[_currentLine][_currentPosition].Type != TokenType.Null && tokensByLine[_currentLine][_currentPosition].Type != TokenType.END)
                 {
                     try
                     {
-                        ASTNode proccesNode = ParseKeyW();
-                        block.Add(proccesNode);
+                        if (!instructionDetected)
+                        {
+                            ASTNode proccesNode = ParseKeyW();
+                            block.Add(proccesNode);
+                            instructionDetected = true;
+
+                        }
+                        else
+                        {
+                            throw new SyntaxException($"No pueden haber mas de dos instrucciones en la misma linea: {_currentLine}");
+                        }
 
                     }
                     catch (SyntaxException e)
@@ -39,6 +49,7 @@ public class Parser
 
 
                 }
+
             }
 
         }
@@ -207,8 +218,11 @@ public class Parser
     {
         if (tokensByLine[_currentLine][_currentPosition + 1].Type == TokenType.Jump || tokensByLine[_currentLine][_currentPosition + 1].Type == TokenType.END)
         {
+            if (!FunctionManager.labels.ContainsKey(tokensByLine[_currentLine][_currentPosition].Value))
+            {
+                FunctionManager.labels.Add(tokensByLine[_currentLine][_currentPosition].Value, block.Count);
 
-            FunctionManager.labels.Add(tokensByLine[_currentLine][_currentPosition].Value, block.Count);
+            }
             return new LabelNode(tokensByLine[_currentLine][_currentPosition], block.Count);
         }
         else
